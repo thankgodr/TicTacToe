@@ -7,6 +7,7 @@ class GameInterface
   @current_player = nil
 
   def initialize
+    
     system('clear')
     @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
     @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O'.red }
