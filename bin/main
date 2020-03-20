@@ -7,6 +7,7 @@ class GameInterface
   @current_player = nil;
 
   def initialize
+    system("clear")
     @x_player = {"name" => nil, "at_turn?" => false, "mark" => "X" }
     @o_player = {"name" => nil, "at_turn?" => false, "mark" => "O" }
     temp = []
@@ -23,28 +24,39 @@ class GameInterface
         @arr << temp
       end
     end
+  end
 
-    @board =  "     #{@arr[0][0]} | #{@arr[0][1]} | #{@arr[0][2]}
+  def print_board
+   puts @board =  "     #{@arr[0][0]} | #{@arr[0][1]} | #{@arr[0][2]}
     ___*___*___
      #{@arr[1][0]} | #{@arr[1][1]} | #{@arr[1][2]}
     ___*___*___
      #{@arr[2][0]} | #{@arr[2][1]} | #{@arr[2][2]} "
-
   end
 
   def new_turn(player)
-    puts @board
-    puts "#{player} it is your turn! Enter the number of the cell you want to mark"
-
+    print_board
+    puts "#{player["name"]} it is your turn! Enter the number of the cell you want to mark"
     begin
       cell = Integer(gets.chomp)
+      if player["mark"] == "X"
+        @x_player["at_turn?"] = false
+        @o_player["at_turn?"] = true
+        integer_to_index(cell, "X")
+        player = @o_player
+      else
+        @x_player["at_turn?"] = true
+        @o_player["at_turn?"] = false
+        integer_to_index(cell, "O")
+        player = @x_player
+      end
       #Alternate players here.
-      if(player[])
     rescue ArgumentError
       puts 'Please enter a valid integer'
       new_turn(player)
     end
-
+    system("clear")
+    new_turn(player)
   end
 
   def display
@@ -85,16 +97,23 @@ class GameInterface
       assign_first_player
     end
     if first_player == 1
-      puts "Alright #{@x_player_name}, it's your turn"
       @x_player["at_turn?"] = true
       new_turn(@x_player)
     elsif first_player == 2
-      puts "Alright #{@o_player_name}, it's your turn"
       @o_player["at_turn?"] = true
       new_turn(@o_player)
     end
   end
-
+ 
+  def integer_to_index(input, mark)
+    if input < 4
+      @arr[0][input - 1] = mark
+    elsif input < 7 && input > 3
+      @arr[1][input - 4] = mark
+    else
+      @arr[2][input- 7] = mark
+    end
+  end
 end
 
 GameInterface.new.display
