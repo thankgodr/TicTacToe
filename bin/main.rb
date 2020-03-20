@@ -6,13 +6,11 @@ class GameInterface
   @arr = nil
   @current_player = nil
   @game_on = nil
+  @gameMoves = nil
 
   def initialize
-<<<<<<< HEAD
-    
-=======
+    @gameMoves = 0
     @game_on = true
->>>>>>> 1802bd3846af735f4604b34e913a7a9d258d88eb
     system('clear')
     @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
     @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O'.red }
@@ -78,6 +76,12 @@ class GameInterface
     puts "#{player['name']} it is your turn! Enter the number of the cell you want to mark"
     begin
       test_winner(player)
+      test_draw
+      if @gameMoves.zero?
+        puts "Its a draw"
+         game_on = false
+      end
+
     end
 
     if @game_on
@@ -150,6 +154,7 @@ class GameInterface
       @arr[1][input - 4] = mark
     else
       @arr[2][input - 7] = mark
+      
     end
   end
 
@@ -174,6 +179,25 @@ class GameInterface
       @game_on = false if column.all? { |i| i == column[0] }
     end
     test_winner_diagonal(player)
+  end
+
+  def test_draw
+    @gameMoves = 0
+    @arr.each do |row|
+     @gameMoves += 1 unless row.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
+    end
+    transposed = @arr.transpose
+    transposed.each do |column|
+      @gameMoves += 1 unless column.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
+    end
+    test_draw_diagonal()
+  end
+
+  def test_draw_diagonal
+    temp_array = [ @arr[0][0], @arr[1][1], @arr[2][2] ]
+    temp_array_two = [@arr[0][2], @arr[1][1], @arr[2][0]]
+    @gameMoves += 1 unless temp_array.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
+    @gameMoves += 1 unless temp_array_two.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
   end
 end
 
