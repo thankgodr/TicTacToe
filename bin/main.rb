@@ -18,7 +18,7 @@ class GameInterface
         @arr << temp
         temp = []
       end
-      temp << i.to_s
+      temp << i
       @arr << temp if i == 9
     end
   end
@@ -31,17 +31,36 @@ class GameInterface
      #{@arr[2][0]} | #{@arr[2][1]} | #{@arr[2][2]} "
   end
 
+  def verifyInputs
+    input = Integer(gets.chomp)
+    if input < 4
+      if @arr[0][input - 1].is_a?(Integer)
+        return input
+      end
+    elsif input < 7 && input > 3
+      if @arr[1][input - 4].is_a?(Integer)
+        return input
+      end
+    else
+      if @arr[2][input - 7].is_a?(Integer)
+        return input
+      end
+    end
+    puts "Invalid Cell Selected"
+    verifyInputs
+  end
+
   def change_player(player)
-    cell = Integer(gets.chomp)
+    cell = verifyInputs()
     if player['mark'] == @x_player['mark']
+      integer_to_index(cell, player['mark'])
       @x_player['at_turn?'] = false
       @o_player['at_turn?'] = true
-      integer_to_index(cell, player['mark'])
       player = @o_player
     else
+      integer_to_index(cell, player['mark'])
       @x_player['at_turn?'] = true
       @o_player['at_turn?'] = false
-      integer_to_index(cell, player['mark'])
       player = @x_player
     end
     player
