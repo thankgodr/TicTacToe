@@ -5,11 +5,17 @@ class GameInterface
   @o_player = nil
   @arr = nil
   @current_player = nil
+  @game_on = nil
 
   def initialize
+    @game_on = true
     system('clear')
     @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
     @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O'.red }
+    array_new
+  end
+
+  def array_new
     temp = []
     @arr = []
     (1..9).each do |i|
@@ -34,24 +40,18 @@ class GameInterface
   def verifyInputs
     input = Integer(gets.chomp)
     if input < 4
-      if @arr[0][input - 1].is_a?(Integer)
-        return input
-      end
+      return input if @arr[0][input - 1].is_a?(Integer)
     elsif input < 7 && input > 3
-      if @arr[1][input - 4].is_a?(Integer)
-        return input
-      end
+      return input if @arr[1][input - 4].is_a?(Integer)
     else
-      if @arr[2][input - 7].is_a?(Integer)
-        return input
-      end
+      return input if @arr[2][input - 7].is_a?(Integer)
     end
-    puts "Invalid Cell Selected"
+    puts 'Invalid Cell Selected'
     verifyInputs
   end
 
   def change_player(player)
-    cell = verifyInputs()
+    cell = verifyInputs
     if player['mark'] == @x_player['mark']
       integer_to_index(cell, player['mark'])
       @x_player['at_turn?'] = false
@@ -73,10 +73,26 @@ class GameInterface
     print_board
     puts "#{player['name']} it is your turn! Enter the number of the cell you want to mark"
     begin
-      player = change_player(player)
+      test_winner(player)
     end
-    system('clear')
-    new_turn(player)
+
+    if @game_on
+      player = change_player(player)
+      system('clear')
+      new_turn(player)
+    end
+
+    puts "Congrats #{player['name']}, you won!"
+    puts 'Do wou want to play it again? Y/N'
+    input = gets.chomp
+    if input == 'Y'
+      @game_on == true
+      array_new
+      assign_first_player
+    else
+      puts 'Ok!'
+      sleep 10
+    end
   end
 
   def display
@@ -131,6 +147,29 @@ class GameInterface
     else
       @arr[2][input - 7] = mark
     end
+  end
+
+  def test_winner_diagonal(_player)
+    if @arr[0][0] == @arr[1][1] &&
+       @arr[1][1] == @arr[2][2]
+      @game_on = false
+    elsif @arr[0][2] == @arr[1][1] &&
+          @arr[1][1] == @arr[2][0]
+      @game_on = false
+
+    end
+  end
+
+  def test_winner(player)
+    puts 'Test winner'
+    @arr.each do |row|
+      @game_on = false if row.all? { |i| i == row[0] }
+    end
+    transposed = @arr.transpose
+    transposed.each do |column|
+      @game_on = false if column.all? { |i| i == column[0] }
+    end
+    test_winner_diagonal(player)
   end
 end
 
