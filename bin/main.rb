@@ -8,8 +8,8 @@ class GameInterface
 
   def initialize
     system('clear')
-    @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X' }
-    @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O' }
+    @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
+    @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O'.red }
     temp = []
     @arr = []
     (1..9).each do |i|
@@ -33,15 +33,15 @@ class GameInterface
 
   def change_player(player)
     cell = Integer(gets.chomp)
-    if player['mark'] == 'X'
+    if player['mark'] == @x_player['mark']
       @x_player['at_turn?'] = false
       @o_player['at_turn?'] = true
-      integer_to_index(cell, 'X')
+      integer_to_index(cell, player['mark'])
       player = @o_player
     else
       @x_player['at_turn?'] = true
       @o_player['at_turn?'] = false
-      integer_to_index(cell, 'O')
+      integer_to_index(cell, player['mark'])
       player = @x_player
     end
     player
@@ -112,6 +112,37 @@ class GameInterface
     else
       @arr[2][input - 7] = mark
     end
+  end
+end
+
+class String
+  # colorization
+  def colorize(color_code)
+    "\e[#{color_code}m#{self}\e[0m"
+  end
+
+  def red
+    colorize(31)
+  end
+
+  def green
+    colorize(32)
+  end
+
+  def yellow
+    colorize(33)
+  end
+
+  def blue
+    colorize(34)
+  end
+
+  def pink
+    colorize(35)
+  end
+
+  def light_blue
+    colorize(36)
   end
 end
 
