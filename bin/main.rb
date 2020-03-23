@@ -1,34 +1,20 @@
 #!/usr/bin/env ruby
+require_relative '../lib/game_logic.rb'
+
 class GameInterface
   @board = nil
   @x_player = nil
   @o_player = nil
   @arr = nil
   @current_player = nil
-  @game_on = nil
-  @game_moves = nil
+  @game_logic = nil
 
   def initialize
-    @game_moves = 0
-    @game_on = true
     system('clear')
-    @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
-    @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O'.red }
-    array_new
-  end
-
-  def array_new
-    temp = []
-    @arr = []
-    (1..9).each do |i|
-      if temp.size < 3
-      else
-        @arr << temp
-        temp = []
-      end
-      temp << i
-      @arr << temp if i == 9
-    end
+    @game_logic = GameLogic.new
+    @arr = @game_logic.arr
+    @x_player = @game_logic.x_player
+    @o_player = @game_logic.o_player
   end
 
   def print_board
@@ -59,9 +45,7 @@ class GameInterface
       verify_inputs
     end
   end
-end
 
-class GameInterface
   def alternate_player(player)
     if player['mark'] == @x_player['mark']
       @x_player['at_turn?'] = false
@@ -77,7 +61,7 @@ class GameInterface
 
   def get_cell(player)
     cell = verify_inputs
-    integer_to_index(cell, player['mark'])
+    @game_logic.integer_to_index(cell, player['mark'])
     alternate_player(player)
   rescue ArgumentError
     puts 'Please enter a valid integer'
@@ -85,16 +69,16 @@ class GameInterface
   end
 
   def new_turn(player)
-    test_draw
-    test_winner(player)
-    if @game_moves.zero?
+    @game_logic.test_draw
+    @game_logic.test_winner(player)
+    if @game_logic.game_moves.zero?
       puts 'Its a draw'
-      @game_on = false
+      @game_logic.game_on = false
       new_game
     end
 
     print_board
-    if @game_on
+    if @game_logic.game_on
       puts "#{player['name']} it is your turn! Enter the number of the cell you want to mark"
       player = get_cell(player)
       system('clear')
@@ -112,9 +96,11 @@ class GameInterface
   def new_game
     puts 'Do wou want to play it again? Y/N'
     input = gets.chomp
-    if input == 'Y'
-      @game_on = true
-      array_new
+    if input.downcase == 'y'
+      system('clear')
+      @game_logic.game_on = true
+      @game_logic.array_new
+      @arr = @game_logic.arr
       assign_first_player
     else
       puts 'Ok!'
@@ -166,64 +152,9 @@ class GameInterface
       new_turn(@x_player)
     end
   end
-
-  def integer_to_index(input, mark)
-    if input < 4
-      @arr[0][input - 1] = mark
-    elsif input < 7 && input > 3
-      @arr[1][input - 4] = mark
-    else
-      @arr[2][input - 7] = mark
-
-    end
-  end
-
-  def test_winner_diagonal(_player)
-    if @arr[0][0] == @arr[1][1] &&
-       @arr[1][1] == @arr[2][2]
-      @game_on = false
-    elsif @arr[0][2] == @arr[1][1] &&
-          @arr[1][1] == @arr[2][0]
-      @game_on = false
-
-    end
-  end
-
-  def test_winner(player)
-    @arr.each do |row|
-      @game_on = false if row.all? { |i| i == row[0] }
-    end
-    transposed = @arr.transpose
-    transposed.each do |column|
-      @game_on = false if column.all? { |i| i == column[0] }
-    end
-    test_winner_diagonal(player)
-  end
-
-  def test_draw
-    @game_moves = 8
-    @arr.each do |row|
-      @game_moves -= 1 if row.any? { |i| i == @x_player['mark'] } && row.any? { |i| i == @o_player['mark'] }
-    end
-    transposed = @arr.transpose
-    transposed.each do |column|
-      @game_moves -= 1 if column.any? { |i| i == @x_player['mark'] } && column.any? { |i| i == @o_player['mark'] }
-    end
-    test_draw_diagonal
-  end
-
-  def test_draw_diagonal
-    temp_array = [@arr[0][0], @arr[1][1], @arr[2][2]]
-    temp_array_two = [@arr[0][2], @arr[1][1], @arr[2][0]]
-    @game_moves -= 1 if temp_array.any? { |i| i == @x_player['mark'] } &&
-                        temp_array.any? { |i| i == @o_player['mark'] }
-    @game_moves -= 1 if temp_array_two.any? { |i| i == @x_player['mark'] } &&
-                        temp_array_two.any? { |i| i == @o_player['mark'] }
-  end
 end
 
 class String
-  # colorization
   def colorize(color_code)
     "\e[#{color_code}m#{self}\e[0m"
   end
