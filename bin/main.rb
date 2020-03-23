@@ -190,7 +190,6 @@ class GameInterface
   end
 
   def test_winner(player)
-    puts 'Test winner'
     @arr.each do |row|
       @game_on = false if row.all? { |i| i == row[0] }
     end
