@@ -9,7 +9,7 @@ class GameInterface
   @gameMoves = nil
 
   def initialize
-    @gameMoves = 0
+    @gameMoves = 8
     @game_on = true
     system('clear')
     @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
@@ -80,6 +80,7 @@ class GameInterface
       if @gameMoves.zero?
         puts "Its a draw"
          game_on = false
+         new_game
       end
 
     end
@@ -91,6 +92,10 @@ class GameInterface
     end
 
     puts "Congrats #{player['name']}, you won!"
+    new_game
+  end
+
+  def new_game
     puts 'Do wou want to play it again? Y/N'
     input = gets.chomp
     if input == 'Y'
@@ -99,7 +104,7 @@ class GameInterface
       assign_first_player
     else
       puts 'Ok!'
-      sleep 10
+      exit
     end
   end
 
@@ -123,11 +128,11 @@ class GameInterface
     end
     @x_player['name'] = @x_player_name
 
-    puts "Who is playing first? (Enter 1 for #{@x_player_name} or 2 for #{@o_player_name})"
     assign_first_player
   end
 
   def assign_first_player()
+    puts "Who is playing first? (Enter 1 for #{@x_player_name} or 2 for #{@o_player_name})"
     begin
       first_player = Integer(gets.chomp)
       if !first_player.positive? || first_player > 2
@@ -182,22 +187,23 @@ class GameInterface
   end
 
   def test_draw
-    @gameMoves = 0
+    @gameMoves = 8
     @arr.each do |row|
-     @gameMoves += 1 unless row.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
+     @gameMoves -= 1 if row.any?{ |i| i == @x_player["mark"] } && row.any?{ |i| i == @o_player["mark"] }
     end
     transposed = @arr.transpose
     transposed.each do |column|
-      @gameMoves += 1 unless column.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
+      @gameMoves -= 1 if column.any?{ |i| i == @x_player["mark"]} && column.any?{ |i| i == @o_player["mark"]}
     end
     test_draw_diagonal()
+    puts "Games moves #{@gameMoves}"
   end
 
   def test_draw_diagonal
     temp_array = [ @arr[0][0], @arr[1][1], @arr[2][2] ]
     temp_array_two = [@arr[0][2], @arr[1][1], @arr[2][0]]
-    @gameMoves += 1 unless temp_array.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
-    @gameMoves += 1 unless temp_array_two.any?{ |i| i == @x_player["mark"] && i == @o_player["mark"] }
+    @gameMoves -= 1 if temp_array.any?{ |i| i == @x_player["mark"]} && temp_array.any?{ |i| i == @o_player["mark"]} 
+    @gameMoves -= 1 if temp_array_two.any?{ |i| i == @x_player["mark"]} && temp_array_two.any?{ |i| i == @o_player["mark"]}
   end
 end
 
