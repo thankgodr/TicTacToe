@@ -38,9 +38,7 @@ class GameInterface
     ___*___*___
      #{@arr[2][0]} | #{@arr[2][1]} | #{@arr[2][2]} "
   end
-end
 
-class GameInterface
   def verify_inputs
     input = Integer(gets.chomp)
     if input < 4
@@ -57,13 +55,14 @@ class GameInterface
       number
     else
       puts 'Invalid Cell Selected'
+      puts 'Please input a valid cell!'
       verify_inputs
     end
   end
+end
 
-  def change_player(player)
-    cell = verify_inputs
-    integer_to_index(cell, player['mark'])
+class GameInterface
+  def alternate_player(player)
     if player['mark'] == @x_player['mark']
       @x_player['at_turn?'] = false
       @o_player['at_turn?'] = true
@@ -74,24 +73,30 @@ class GameInterface
       player = @x_player
     end
     player
+  end
+
+  def get_cell(player)
+    cell = verify_inputs
+    integer_to_index(cell, player['mark'])
+    alternate_player(player)
   rescue ArgumentError
     puts 'Please enter a valid integer'
     new_turn(player)
   end
 
   def new_turn(player)
-    print_board
-    puts "#{player['name']} it is your turn! Enter the number of the cell you want to mark"
-    begin
-      test_winner(player)
-      test_draw
-      if @game_moves.zero?
-        puts 'Its a draw'
-        @game_on = false
-      end
+    test_draw
+    test_winner(player)
+    if @game_moves.zero?
+      puts 'Its a draw'
+      @game_on = false
+      new_game
     end
+
+    print_board
     if @game_on
-      player = change_player(player)
+      puts "#{player['name']} it is your turn! Enter the number of the cell you want to mark"
+      player = get_cell(player)
       system('clear')
       new_turn(player)
     end
@@ -99,7 +104,12 @@ class GameInterface
   end
 
   def congrat_winner(player)
+    player = alternate_player(player)
     puts "Congrats #{player['name']}, you won!"
+    new_game
+  end
+
+  def new_game
     puts 'Do wou want to play it again? Y/N'
     input = gets.chomp
     if input == 'Y'
@@ -108,13 +118,14 @@ class GameInterface
       assign_first_player
     else
       puts 'Ok!'
+      exit
     end
   end
 
   def display
-    puts 'Please enter Player one name'
+    puts 'Please enter player one name'
 
-    @o_player_name = gets.chomp
+    @o_player_name = gets.chomp.red
     while @o_player_name.empty?
       system('clear')
       puts 'Please enter Player one name'
@@ -123,7 +134,7 @@ class GameInterface
     @o_player['name'] = @o_player_name
 
     puts 'Please enter Player two name'
-    @x_player_name = gets.chomp
+    @x_player_name = gets.chomp.green
     while @x_player_name.empty?
       system('clear')
       puts 'Please enter Player two name'
@@ -131,11 +142,11 @@ class GameInterface
     end
     @x_player['name'] = @x_player_name
 
-    puts "Who is playing first? (Enter 1 for #{@x_player_name} or 2 for #{@o_player_name})"
     assign_first_player
   end
 
   def assign_first_player()
+    puts "Who is playing first? (Enter 1 for #{@o_player_name} or 2 for #{@x_player_name})"
     begin
       first_player = Integer(gets.chomp)
       if !first_player.positive? || first_player > 2
@@ -146,12 +157,13 @@ class GameInterface
       puts 'Please Enter only 1 or 2'
       assign_first_player
     end
+    system('clear')
     if first_player == 1
-      @x_player['at_turn?'] = true
-      new_turn(@x_player)
-    elsif first_player == 2
       @o_player['at_turn?'] = true
       new_turn(@o_player)
+    elsif first_player == 2
+      @x_player['at_turn?'] = true
+      new_turn(@x_player)
     end
   end
 
@@ -190,13 +202,13 @@ class GameInterface
   end
 
   def test_draw
-    @game_moves = 0
+    @game_moves = 8
     @arr.each do |row|
-      @game_moves += 1 unless row.any? { |i| i == @x_player['mark'] && i == @o_player['mark'] }
+      @game_moves -= 1 if row.any? { |i| i == @x_player['mark'] } && row.any? { |i| i == @o_player['mark'] }
     end
     transposed = @arr.transpose
     transposed.each do |column|
-      @game_moves += 1 unless column.any? { |i| i == @x_player['mark'] && i == @o_player['mark'] }
+      @game_moves -= 1 if column.any? { |i| i == @x_player['mark'] } && column.any? { |i| i == @o_player['mark'] }
     end
     test_draw_diagonal
   end
@@ -204,8 +216,10 @@ class GameInterface
   def test_draw_diagonal
     temp_array = [@arr[0][0], @arr[1][1], @arr[2][2]]
     temp_array_two = [@arr[0][2], @arr[1][1], @arr[2][0]]
-    @game_moves += 1 unless temp_array.any? { |i| i == @x_player['mark'] && i == @o_player['mark'] }
-    @game_moves += 1 unless temp_array_two.any? { |i| i == @x_player['mark'] && i == @o_player['mark'] }
+    @game_moves -= 1 if temp_array.any? { |i| i == @x_player['mark'] } &&
+                        temp_array.any? { |i| i == @o_player['mark'] }
+    @game_moves -= 1 if temp_array_two.any? { |i| i == @x_player['mark'] } &&
+                        temp_array_two.any? { |i| i == @o_player['mark'] }
   end
 end
 
@@ -221,22 +235,6 @@ class String
 
   def green
     colorize(32)
-  end
-
-  def yellow
-    colorize(33)
-  end
-
-  def blue
-    colorize(34)
-  end
-
-  def pink
-    colorize(35)
-  end
-
-  def light_blue
-    colorize(36)
   end
 end
 
