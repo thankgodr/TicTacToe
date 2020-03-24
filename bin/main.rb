@@ -13,56 +13,27 @@ class GameInterface
 
   def initialize
     system('clear')
-    @x_player = Player.new(nil, "X".green)
-    @o_player = Player.new(nil, "0".red)
+    @x_player = Player.new(nil, 'X'.green)
+    @o_player = Player.new(nil, '0'.red)
     @game_logic = GameLogic.new(@x_player, @o_player)
     @board = Board.new(@game_logic.arr)
     @arr = @game_logic.arr
-    
   end
 
   def print_board
     puts @board.update_board(@game_logic.arr)
   end
 
-  def verify_inputs
+  def get_cell(player)
     input = Integer(gets.chomp)
-    if input < 4
-      check_integer(input, 0, 1)
-    elsif input < 7 && input > 3
-      check_integer(input, 1, 4)
-    else
-      check_integer(input, 2, 7)
-    end
-  end
-
-  def check_integer(number, index, offset)
-    if @arr[index][number - offset].is_a?(Integer)
-      number
-    else
+    cell = @game_logic.verify_inputs(input)
+    if cell.zero?
       puts 'Invalid Cell Selected'
       puts 'Please input a valid cell!'
-      verify_inputs
+      get_cell(player)
     end
-  end
-
-  def alternate_player(player)
-    if player.mark == @x_player.mark
-      @x_player.at_turn = false
-      @o_player.at_turn = true
-      player = @o_player
-    else
-      @x_player.at_turn = true
-      @o_player.at_turn = false
-      player = @x_player
-    end
-    player
-  end
-
-  def get_cell(player)
-    cell = verify_inputs
     @game_logic.integer_to_index(cell, player.mark)
-    alternate_player(player)
+    @game_logic.alternate_player(player)
   rescue ArgumentError
     puts 'Please enter a valid integer'
     new_turn(player)
@@ -76,7 +47,6 @@ class GameInterface
       @game_logic.game_on = false
       new_game
     end
-
     print_board
     if @game_logic.game_on
       puts "#{player.name} it is your turn! Enter the number of the cell you want to mark"
@@ -88,7 +58,7 @@ class GameInterface
   end
 
   def congrat_winner(player)
-    player = alternate_player(player)
+    player = @game_logic.alternate_player(player)
     puts "Congrats #{player.name}, you won!"
     new_game
   end
@@ -110,7 +80,6 @@ class GameInterface
 
   def display
     puts 'Please enter player one name'
-
     @o_player_name = gets.chomp.red
     while @o_player_name.empty?
       system('clear')
@@ -127,7 +96,6 @@ class GameInterface
       @x_player_name = gets.chomp
     end
     @x_player.name = @x_player_name
-
     assign_first_player
   end
 

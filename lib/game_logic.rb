@@ -9,8 +9,26 @@ class GameLogic
     array_new
     @game_on = true
     @game_moves = 0
-    @x_player =player_one 
+    @x_player = player_one
     @o_player = player_two
+  end
+
+  def verify_inputs(input)
+    if input < 4
+      check_integer(input, 0, 1)
+    elsif input < 7 && input > 3
+      check_integer(input, 1, 4)
+    else
+      check_integer(input, 2, 7)
+    end
+  end
+
+  def check_integer(number, index, offset)
+    if @arr[index][number - offset].is_a?(Integer)
+      number
+    else
+      0
+    end
   end
 
   def array_new
@@ -52,11 +70,11 @@ class GameLogic
   def test_draw
     @game_moves = 8
     @arr.each do |row|
-      @game_moves -= 1 if row.any? { |i| i == @x_player.mark} && row.any? { |i| i == @o_player.mark }
+      @game_moves -= 1 if row.any? { |i| i == @x_player.mark } && row.any? { |i| i == @o_player.mark }
     end
     transposed = @arr.transpose
     transposed.each do |column|
-      @game_moves -= 1 if column.any? { |i| i == @x_player.mark} && column.any? { |i| i == @o_player.mark }
+      @game_moves -= 1 if column.any? { |i| i == @x_player.mark } && column.any? { |i| i == @o_player.mark }
     end
     test_draw_diagonal
   end
@@ -79,5 +97,18 @@ class GameLogic
       @arr[2][input - 7] = mark
 
     end
+  end
+
+  def alternate_player(player)
+    if player.mark == @x_player.mark
+      @x_player.at_turn = false
+      @o_player.at_turn = true
+      player = @o_player
+    else
+      @x_player.at_turn = true
+      @o_player.at_turn = false
+      player = @x_player
+    end
+    player
   end
 end
