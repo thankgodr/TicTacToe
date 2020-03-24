@@ -1,28 +1,28 @@
 #!/usr/bin/env ruby
 require_relative '../lib/game_logic.rb'
+require_relative '../lib/player.rb'
+require_relative '../lib/board.rb'
 
 class GameInterface
-  @board = nil
   @x_player = nil
   @o_player = nil
   @arr = nil
   @current_player = nil
   @game_logic = nil
+  @board = nil
 
   def initialize
     system('clear')
-    @game_logic = GameLogic.new
+    @x_player = Player.new(nil, "X".green)
+    @o_player = Player.new(nil, "0".red)
+    @game_logic = GameLogic.new(@x_player, @o_player)
+    @board = Board.new(@game_logic.arr)
     @arr = @game_logic.arr
-    @x_player = @game_logic.x_player
-    @o_player = @game_logic.o_player
+    
   end
 
   def print_board
-    puts @board = "     #{@arr[0][0]} | #{@arr[0][1]} | #{@arr[0][2]}
-    ___*___*___
-     #{@arr[1][0]} | #{@arr[1][1]} | #{@arr[1][2]}
-    ___*___*___
-     #{@arr[2][0]} | #{@arr[2][1]} | #{@arr[2][2]} "
+    puts @board.update_board(@game_logic.arr)
   end
 
   def verify_inputs
@@ -47,13 +47,13 @@ class GameInterface
   end
 
   def alternate_player(player)
-    if player['mark'] == @x_player['mark']
-      @x_player['at_turn?'] = false
-      @o_player['at_turn?'] = true
+    if player.mark == @x_player.mark
+      @x_player.at_turn = false
+      @o_player.at_turn = true
       player = @o_player
     else
-      @x_player['at_turn?'] = true
-      @o_player['at_turn?'] = false
+      @x_player.at_turn = true
+      @o_player.at_turn = false
       player = @x_player
     end
     player
@@ -61,7 +61,7 @@ class GameInterface
 
   def get_cell(player)
     cell = verify_inputs
-    @game_logic.integer_to_index(cell, player['mark'])
+    @game_logic.integer_to_index(cell, player.mark)
     alternate_player(player)
   rescue ArgumentError
     puts 'Please enter a valid integer'
@@ -79,7 +79,7 @@ class GameInterface
 
     print_board
     if @game_logic.game_on
-      puts "#{player['name']} it is your turn! Enter the number of the cell you want to mark"
+      puts "#{player.name} it is your turn! Enter the number of the cell you want to mark"
       player = get_cell(player)
       system('clear')
       new_turn(player)
@@ -89,7 +89,7 @@ class GameInterface
 
   def congrat_winner(player)
     player = alternate_player(player)
-    puts "Congrats #{player['name']}, you won!"
+    puts "Congrats #{player.name}, you won!"
     new_game
   end
 
@@ -117,7 +117,7 @@ class GameInterface
       puts 'Please enter Player one name'
       @o_player_name = gets.chomp
     end
-    @o_player['name'] = @o_player_name
+    @o_player.name = @o_player_name
 
     puts 'Please enter Player two name'
     @x_player_name = gets.chomp.green
@@ -126,13 +126,13 @@ class GameInterface
       puts 'Please enter Player two name'
       @x_player_name = gets.chomp
     end
-    @x_player['name'] = @x_player_name
+    @x_player.name = @x_player_name
 
     assign_first_player
   end
 
   def assign_first_player()
-    puts "Who is playing first? (Enter 1 for #{@o_player_name} or 2 for #{@x_player_name})"
+    puts "Who is playing first? (Enter 1 for #{@o_player.name} or 2 for #{@x_player.name})"
     begin
       first_player = Integer(gets.chomp)
       if !first_player.positive? || first_player > 2
@@ -145,10 +145,10 @@ class GameInterface
     end
     system('clear')
     if first_player == 1
-      @o_player['at_turn?'] = true
+      @o_player.at_turn = true
       new_turn(@o_player)
     elsif first_player == 2
-      @x_player['at_turn?'] = true
+      @x_player.at_turn = true
       new_turn(@x_player)
     end
   end

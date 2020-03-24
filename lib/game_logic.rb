@@ -5,12 +5,12 @@ class GameLogic
   attr_reader :x_player
   attr_reader :o_player
 
-  def initialize
+  def initialize(player_one, player_two)
     array_new
     @game_on = true
     @game_moves = 0
-    @x_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'X'.green }
-    @o_player = { 'name' => nil, 'at_turn?' => false, 'mark' => 'O'.red }
+    @x_player =player_one 
+    @o_player = player_two
   end
 
   def array_new
@@ -52,11 +52,11 @@ class GameLogic
   def test_draw
     @game_moves = 8
     @arr.each do |row|
-      @game_moves -= 1 if row.any? { |i| i == @x_player['mark'] } && row.any? { |i| i == @o_player['mark'] }
+      @game_moves -= 1 if row.any? { |i| i == @x_player.mark} && row.any? { |i| i == @o_player.mark }
     end
     transposed = @arr.transpose
     transposed.each do |column|
-      @game_moves -= 1 if column.any? { |i| i == @x_player['mark'] } && column.any? { |i| i == @o_player['mark'] }
+      @game_moves -= 1 if column.any? { |i| i == @x_player.mark} && column.any? { |i| i == @o_player.mark }
     end
     test_draw_diagonal
   end
@@ -64,10 +64,10 @@ class GameLogic
   def test_draw_diagonal
     temp_array = [@arr[0][0], @arr[1][1], @arr[2][2]]
     temp_array_two = [@arr[0][2], @arr[1][1], @arr[2][0]]
-    @game_moves -= 1 if temp_array.any? { |i| i == @x_player['mark'] } &&
-                        temp_array.any? { |i| i == @o_player['mark'] }
-    @game_moves -= 1 if temp_array_two.any? { |i| i == @x_player['mark'] } &&
-                        temp_array_two.any? { |i| i == @o_player['mark'] }
+    @game_moves -= 1 if temp_array.any? { |i| i == @x_player.mark } &&
+                        temp_array.any? { |i| i == @o_player.mark }
+    @game_moves -= 1 if temp_array_two.any? { |i| i == @x_player.mark } &&
+                        temp_array_two.any? { |i| i == @o_player.mark }
   end
 
   def integer_to_index(input, mark)
