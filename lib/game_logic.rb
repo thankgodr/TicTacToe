@@ -18,24 +18,16 @@ class GameLogic
 
   def congrat_winner(player)
     player = alternate_player(player)
-    puts "Congrats #{player.name}, you won!"
     yield
   end
 
   def new_game
-    puts 'Do wou want to play it again? Y/N'
-    input = gets.chomp
-    if input.downcase == 'y'
-      system('clear')
-      @game_on = true
-      array_new
-      @arr = arr
-      if block_given?
-        yield
-      end
-    else
-      puts 'Ok!'
-      exit
+    system('clear')
+    @game_on = true
+    array_new
+    @arr = arr
+    if block_given?
+      yield
     end
   end
 
@@ -43,17 +35,7 @@ class GameLogic
     @board.update_board(@arr)
   end
 
-  def assign_first_player(o_player, x_player)
-    begin
-      first_player = Integer(gets.chomp)
-      if !first_player.positive? || first_player > 2
-        puts 'Please Enter only 1 or 2'
-        assign_first_player(o_player, x_player)
-      end
-    rescue ArgumentError
-      puts 'Please Enter only 1 or 2'
-      assign_first_player(o_player, x_player)
-    end
+  def assign_first_player(o_player, x_player, first_player)
     system('clear')
     if first_player == 1
       o_player.at_turn = true
@@ -72,20 +54,9 @@ class GameLogic
     end
   end
 
-  def get_cell(player)
-    input = Integer(gets.chomp)
-    cell = verify_inputs(input)
-    if cell.zero?
-      puts 'Invalid Cell Selected'
-      puts 'Please input a valid cell!'
-      get_cell(player)
-    end
+  def get_cell(cell, player)
     integer_to_index(cell, player.mark)
     alternate_player(player)
-  rescue ArgumentError
-    system('clear')
-    puts 'Please enter a valid integer'
-    new_turn(player)
   end
 
   def verify_inputs(input)
