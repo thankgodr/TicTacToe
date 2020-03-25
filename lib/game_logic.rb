@@ -1,3 +1,5 @@
+require_relative '../lib/board.rb'
+
 class GameLogic
   attr_accessor :arr
   attr_accessor :game_on
@@ -11,6 +13,65 @@ class GameLogic
     @game_moves = 0
     @x_player = player_one
     @o_player = player_two
+    @board = Board.new(@arr)
+  end
+
+  def congrat_winner(player)
+    player = alternate_player(player)
+    puts "Congrats #{player.name}, you won!"
+    new_game
+  end
+
+  def new_game
+    puts 'Do wou want to play it again? Y/N'
+    input = gets.chomp
+    if input.downcase == 'y'
+      system('clear')
+      game_on = true
+      array_new
+      @arr = arr
+      assign_first_player
+    else
+      puts 'Ok!'
+      exit
+    end
+  end
+
+  def print_board
+    puts @board.update_board(@arr)
+  end
+
+  def new_turn(player)
+    test_draw
+    test_winner(player)
+    if game_moves.zero?
+      puts 'Its a draw'
+      @game_on = false
+      new_game
+    end
+    print_board
+    if @game_on
+      puts "#{player.name} it is your turn! Enter the number of the cell you want to mark"
+      player = get_cell(player)
+      system('clear')
+      new_turn(player)
+    end
+    congrat_winner(player)
+  end
+
+  def get_cell(player)
+    input = Integer(gets.chomp)
+    cell = verify_inputs(input)
+    if cell.zero?
+      puts 'Invalid Cell Selected'
+      puts 'Please input a valid cell!'
+      get_cell(player)
+    end
+    integer_to_index(cell, player.mark)
+    alternate_player(player)
+  rescue ArgumentError
+    puts 'Please enter a valid integer'
+    new_turn(player)
   end
 
   def verify_inputs(input)
