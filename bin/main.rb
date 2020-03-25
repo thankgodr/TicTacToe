@@ -57,7 +57,20 @@ rescue ArgumentError
   check_first_player
 end
 
-def middle_game(current_player, game_logic)
+def restart_game(o_player, x_player, game_logic)
+  puts 'Do wou want to play it again? Y/N'
+    input = gets.chomp
+    if input.downcase == 'y'
+      game_logic.new_game do
+        start_game(o_player, x_player, game_logic)
+      end
+    else
+      puts 'ok!'
+      exit
+    end
+end
+
+def middle_game(current_player, game_logic, o_player, x_player)
   while game_logic.game_on
     puts "#{current_player.name} it is your turn! Enter the number of the cell you want to mark"
     input = select_cell(game_logic)
@@ -69,7 +82,7 @@ def middle_game(current_player, game_logic)
       if game_logic.game_moves.zero?
         puts 'Its a draw'
         game_logic.game_on = false
-        game_logic.new_game
+        restart_game(o_player, x_player, game_logic)
       end
       puts game_logic.print_board
     end
@@ -81,19 +94,10 @@ def start_game(o_player, x_player, game_logic)
   first_player = check_first_player
   current_player = game_logic.assign_first_player(o_player, x_player, first_player)
   puts game_logic.print_board
-  middle_game(current_player, game_logic)
+  middle_game(current_player, game_logic,o_player, x_player,)
   game_logic.congrat_winner(current_player) do
     puts "Congrats #{current_player.name}, you won!"
-    puts 'Do wou want to play it again? Y/N'
-    input = gets.chomp
-    if input.downcase == 'y'
-      game_logic.new_game do
-        start_game(o_player, x_player, game_logic)
-      end
-    else
-      puts 'ok!'
-      exit
-    end
+    restart_game(o_player, x_player, game_logic)
   end
 end
 
