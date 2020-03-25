@@ -73,8 +73,9 @@ class GameLogic
     print_board
     if @game_on
       puts "#{player.name} it is your turn! Enter the number of the cell you want to mark"
-      player = get_cell(player)
+      get_cell(player)
       system('clear')
+      player = alternate_player(player)
       new_turn(player)
     end
     congrat_winner(player)
