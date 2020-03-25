@@ -37,29 +37,7 @@ class GameInterface
       @x_player_name = gets.chomp
     end
     @x_player.name = @x_player_name
-    assign_first_player
-  end
-
-  def assign_first_player()
-    puts "Who is playing first? (Enter 1 for #{@o_player.name} or 2 for #{@x_player.name})"
-    begin
-      first_player = Integer(gets.chomp)
-      if !first_player.positive? || first_player > 2
-        puts 'Please Enter only 1 or 2'
-        assign_first_player
-      end
-    rescue ArgumentError
-      puts 'Please Enter only 1 or 2'
-      assign_first_player
-    end
-    system('clear')
-    if first_player == 1
-      @o_player.at_turn = true
-      @game_logic.new_turn(@o_player)
-    elsif first_player == 2
-      @x_player.at_turn = true
-      @game_logic.new_turn(@x_player)
-    end
+    @game_logic.assign_first_player
   end
 end
 GameInterface.new.display

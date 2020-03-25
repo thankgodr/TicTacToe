@@ -41,6 +41,28 @@ class GameLogic
     puts @board.update_board(@arr)
   end
 
+  def assign_first_player()
+    puts "Who is playing first? (Enter 1 for #{@o_player.name} or 2 for #{@x_player.name})"
+    begin
+      first_player = Integer(gets.chomp)
+      if !first_player.positive? || first_player > 2
+        puts 'Please Enter only 1 or 2'
+        assign_first_player
+      end
+    rescue ArgumentError
+      puts 'Please Enter only 1 or 2'
+      assign_first_player
+    end
+    system('clear')
+    if first_player == 1
+      @o_player.at_turn = true
+      new_turn(@o_player)
+    elsif first_player == 2
+      @x_player.at_turn = true
+      new_turn(@x_player)
+    end
+  end
+
   def new_turn(player)
     test_draw
     test_winner(player)
@@ -70,6 +92,7 @@ class GameLogic
     integer_to_index(cell, player.mark)
     alternate_player(player)
   rescue ArgumentError
+    system('clear')
     puts 'Please enter a valid integer'
     new_turn(player)
   end
