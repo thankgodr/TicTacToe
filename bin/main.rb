@@ -10,19 +10,25 @@ game_logic = GameLogic.new(x_player, o_player)
 
 puts 'Please enter player one name'
 o_player_name = gets.chomp.red
+
 while o_player_name.empty?
   system('clear')
   puts 'Please enter Player one name'
   o_player_name = gets.chomp
 end
-o_player.name = o_player_name
+
 puts 'Please enter Player two name'
 x_player_name = gets.chomp.green
+
 while x_player_name.empty?
   system('clear')
   puts 'Please enter Player two name'
   x_player_name = gets.chomp
 end
+
 x_player.name = x_player_name
+o_player.name = o_player_name
+
 puts "Who is playing first? (Enter 1 for #{o_player.name} or 2 for #{x_player.name})"
-game_logic.assign_first_player(o_player, x_player)
+first_player = game_logic.assign_first_player(o_player, x_player)
+game_logic.new_turn(first_player)

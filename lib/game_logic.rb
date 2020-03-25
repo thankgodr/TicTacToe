@@ -55,10 +55,10 @@ class GameLogic
     system('clear')
     if first_player == 1
       o_player.at_turn = true
-      new_turn(o_player)
+      o_player
     elsif first_player == 2
       x_player.at_turn = true
-      new_turn(x_player)
+      x_player
     end
   end
 
