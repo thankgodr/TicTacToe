@@ -24,4 +24,5 @@ while x_player_name.empty?
   x_player_name = gets.chomp
 end
 x_player.name = x_player_name
-game_logic.assign_first_player
+puts "Who is playing first? (Enter 1 for #{o_player.name} or 2 for #{x_player.name})"
+game_logic.assign_first_player(o_player, x_player)
