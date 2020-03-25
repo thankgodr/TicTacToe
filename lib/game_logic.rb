@@ -19,7 +19,7 @@ class GameLogic
   def congrat_winner(player)
     player = alternate_player(player)
     puts "Congrats #{player.name}, you won!"
-    new_game
+    yield
   end
 
   def new_game
@@ -27,10 +27,12 @@ class GameLogic
     input = gets.chomp
     if input.downcase == 'y'
       system('clear')
-      game_on = true
+      @game_on = true
       array_new
       @arr = arr
-      assign_first_player
+      if block_given?
+        yield
+      end
     else
       puts 'Ok!'
       exit
@@ -38,7 +40,7 @@ class GameLogic
   end
 
   def print_board
-    puts @board.update_board(@arr)
+    @board.update_board(@arr)
   end
 
   def assign_first_player(o_player, x_player)
@@ -65,20 +67,9 @@ class GameLogic
   def new_turn(player)
     test_draw
     test_winner(player)
-    if game_moves.zero?
-      puts 'Its a draw'
-      @game_on = false
-      new_game
+    if block_given?
+      yield
     end
-    print_board
-    if @game_on
-      puts "#{player.name} it is your turn! Enter the number of the cell you want to mark"
-      get_cell(player)
-      system('clear')
-      player = alternate_player(player)
-      new_turn(player)
-    end
-    congrat_winner(player)
   end
 
   def get_cell(player)
