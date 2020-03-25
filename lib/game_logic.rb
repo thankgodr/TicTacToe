@@ -17,7 +17,7 @@ class GameLogic
   end
 
   def congrat_winner(player)
-    player = alternate_player(player)
+    alternate_player(player)
     yield
   end
 
@@ -26,9 +26,7 @@ class GameLogic
     @game_on = true
     array_new
     @arr = arr
-    if block_given?
-      yield
-    end
+    yield if block_given?
   end
 
   def print_board
@@ -49,9 +47,7 @@ class GameLogic
   def new_turn(player)
     test_draw
     test_winner(player)
-    if block_given?
-      yield
-    end
+    yield if block_given?
   end
 
   def get_cell(cell, player)
