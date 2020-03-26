@@ -12,9 +12,11 @@
 
 - Open Command prompt for windows users or Teminal for Linux/MacOS users and run the following commad
 
-    ```$ cd TICTACTOE
-    ```$ ./bin/main.rb
-
+    ```console
+    $ cd TICTACTOE
+    $ ./bin/main.rb
+    ```
+    
 ## How to Play
 
 - Enter Player one and Player two name when Prompted and hit the enter key on your keyboard
@@ -26,8 +28,9 @@
  ## Note
     If you have quit the game and want to restart the game locate the game folder your terminal and enter
 
-    ```$ ./bin/main.rb
-
+    ```console
+    $ ./bin/main.rb
+    ```
     
 
 ## Built With
