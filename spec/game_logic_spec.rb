@@ -1,5 +1,5 @@
-require './lib/game_logic'
-require './lib/player'
+require_relative '../lib/game_logic'
+require_relative '../lib/player'
 
 RSpec.describe GameLogic do
   let(:game_logic) { GameLogic.new(Player.new('Richie', 'X'), Player.new('Felipe', 'O')) }

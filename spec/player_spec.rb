@@ -1,4 +1,4 @@
-require './lib/player'
+require_relative '../lib/player'
 
 RSpec.describe Player do
   describe 'Player' do
