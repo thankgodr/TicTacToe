@@ -26,7 +26,7 @@
 - You can repaet the game withour entering Players Playing agian without quiting the game
 
  ## Note
-    If you have quit the game and want to restart the game locate the game folder your terminal and enter
+ - If you have quit the game and want to restart the game locate the game folder your terminal and enter
 
     ```console
     $ ./bin/main.rb
