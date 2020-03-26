@@ -12,8 +12,8 @@
 
 - Open Command prompt for windows users or Teminal for Linux/MacOS users and run the following commad
 
-    ```cd TICTACTOE
-    ```./bin/main.rb
+    ```$ cd TICTACTOE
+    ```$ ./bin/main.rb
 
 ## How to Play
 
@@ -26,7 +26,7 @@
  ## Note
     If you have quit the game and want to restart the game locate the game folder your terminal and enter
 
-    ```./bin/main.rb
+    ```$ ./bin/main.rb
 
     
 
