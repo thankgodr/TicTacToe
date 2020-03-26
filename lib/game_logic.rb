@@ -56,7 +56,7 @@ class GameLogic
   end
 
   def verify_inputs(input)
-    if input < 4
+    if input < 4 && input.positive?
       check_integer(input, 0, 1)
     elsif input < 7 && input > 3
       check_integer(input, 1, 4)
@@ -137,7 +137,6 @@ class GameLogic
       @arr[1][input - 4] = mark
     else
       @arr[2][input - 7] = mark
-
     end
   end
 
