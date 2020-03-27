@@ -39,6 +39,10 @@
 
 - RUBY
 
+
+## Test it
+    To run the tests locally, run rspec from the project's root
+
 ## Authors
 
 👤 **ThankGod Richard**
