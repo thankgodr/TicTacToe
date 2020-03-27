@@ -7,41 +7,34 @@ RSpec.describe GameLogic do
     it 'Players are assign' do
       expect(game_logic.x_player).to be_a(Player)
       expect(game_logic.o_player).to be_a(Player)
-    end
-
-    it 'Players are assign (Nagetive)' do
       expect(game_logic.x_player).not_to be_a(Integer)
       expect(game_logic.o_player).not_to be_a(String)
     end
 
+
     it 'Array created' do
       expect(game_logic.arr).to be_a(Array)
-    end
-
-    it 'Array Length to be three' do
       expect(game_logic.arr.size).to eql(3)
     end
 
     let(:temp_arr) { game_logic.arr.all? { |x| x.is_a?(Array) } }
     it 'Its a Multidimentional Array' do
       expect(temp_arr).to eql(true)
-    end
-
-    it 'Its a Multidimentional Array (Negative)' do
       expect(temp_arr).not_to eql(false)
     end
+
 
     let(:temp_arr) { game_logic.arr.all? { |x| x.size == 3 } }
     it 'All sub array lenght should be 3' do
       expect(temp_arr).to eql(true)
-    end
-
-    it 'All sub array lenght should be 3 (Negative)' do
       expect(temp_arr).not_to eql(false)
     end
 
+ 
+
     it 'Game on should be true until otherwise' do
       expect(game_logic.game_on).to eql(true)
+      expect(game_logic.game_on).not_to eql(false)
     end
 
     it 'Game_move should be a number' do
