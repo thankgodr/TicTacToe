@@ -1,17 +1,22 @@
-require './lib/game_logic'
-require './lib/player'
+require_relative '../lib/game_logic'
+require_relative '../lib/player'
 
 RSpec.describe GameLogic do
   let(:game_logic) { GameLogic.new(Player.new('Richie', 'X'), Player.new('Felipe', 'O')) }
-  describe 'GameLogic' do
+  describe 'Assign Players' do
     it 'Players are assign' do
       expect(game_logic.x_player).to be_a(Player)
       expect(game_logic.o_player).to be_a(Player)
       expect(game_logic.x_player).not_to be_a(Integer)
       expect(game_logic.o_player).not_to be_a(String)
     end
+  end
 
+<<<<<<< HEAD
 
+=======
+  describe 'Array is correct' do
+>>>>>>> 1821d0fa5449c02fc07e373b9814f5170e88bf0f
     it 'Array created' do
       expect(game_logic.arr).to be_a(Array)
       expect(game_logic.arr.size).to eql(3)
@@ -29,22 +34,45 @@ RSpec.describe GameLogic do
       expect(temp_arr).to eql(true)
       expect(temp_arr).not_to eql(false)
     end
+  end
 
+<<<<<<< HEAD
  
 
+=======
+  describe 'Game on initialize' do
+>>>>>>> 1821d0fa5449c02fc07e373b9814f5170e88bf0f
     it 'Game on should be true until otherwise' do
       expect(game_logic.game_on).to eql(true)
       expect(game_logic.game_on).not_to eql(false)
     end
 
+    it 'Game on should be true until otherwise (Negative)' do
+      expect(game_logic.game_on).not_to eql(false)
+    end
+  end
+
+  describe 'Game move initialize' do
     it 'Game_move should be a number' do
       expect(game_logic.game_moves).to be_a(Integer)
     end
 
+    it 'Game_move should be a number (Negative)' do
+      expect(game_logic.game_moves).not_to be_a(Array)
+    end
+  end
+
+  describe 'Print board behaves as expected' do
     it 'Print Board should return a String' do
       expect(game_logic.print_board).to be_a(String)
     end
 
+    it 'Print Board should return a String (Negative)' do
+      expect(game_logic.print_board).not_to be_a(Array)
+    end
+  end
+
+  describe 'Assign first player behaves as expected' do
     it 'Assign First player should return a Player' do
       expect(game_logic.assign_first_player(game_logic.x_player, game_logic.o_player, 1)).to be_a(Player)
     end
@@ -53,7 +81,9 @@ RSpec.describe GameLogic do
       expect(game_logic.assign_first_player(game_logic.x_player, game_logic.o_player, 1)).to eql(game_logic.x_player)
       expect(game_logic.assign_first_player(game_logic.x_player, game_logic.o_player, 2)).to eql(game_logic.o_player)
     end
+  end
 
+  describe 'Verify input behaves as expected' do
     it 'Verify input should return a number' do
       expect(game_logic.verify_inputs(3)).to be_a(Integer)
     end
@@ -65,7 +95,9 @@ RSpec.describe GameLogic do
     it 'Verify input should return 0 if number is grater than 9' do
       expect(game_logic.verify_inputs(11)).to eql(0)
     end
+  end
 
+  describe 'alternate player actually changes player' do
     it 'Alternate_player Shold return the next player' do
       expect(game_logic.alternate_player(game_logic.x_player)).to eql(game_logic.o_player)
       expect(game_logic.alternate_player(game_logic.o_player)).to eql(game_logic.x_player)
@@ -75,7 +107,9 @@ RSpec.describe GameLogic do
       expect(game_logic.alternate_player(game_logic.x_player)).not_to eql(game_logic.x_player)
       expect(game_logic.alternate_player(game_logic.o_player)).not_to eql(game_logic.o_player)
     end
+  end
 
+  describe 'get_cell changes the value of array in place' do
     it 'Should change the value of the second element of the first array ' do
       game_logic.get_cell(2, game_logic.x_player)
       expect(game_logic.arr[0][1]).to eql(game_logic.x_player.mark)
@@ -85,7 +119,9 @@ RSpec.describe GameLogic do
       game_logic.get_cell(2, game_logic.x_player)
       expect(game_logic.arr[0][1]).not_to eql(game_logic.o_player.mark)
     end
+  end
 
+  describe 'Game on and game moves are updated' do
     it 'Game on should be off when there is a winner' do
       game_logic.arr[0] = %w[X X X]
       game_logic.test_winner(game_logic.x_player)
@@ -119,7 +155,9 @@ RSpec.describe GameLogic do
       game_logic.test_draw
       expect(game_logic.game_moves).not_to be_within(1).of(8)
     end
+  end
 
+  describe 'Arr is reset' do
     it 'Arr should be reset on new game' do
       game_logic.arr[0] = %w[X X O]
       game_logic.new_game
