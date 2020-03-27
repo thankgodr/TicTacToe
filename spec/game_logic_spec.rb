@@ -3,6 +3,9 @@ require_relative '../lib/player'
 
 RSpec.describe GameLogic do
   let(:game_logic) { GameLogic.new(Player.new('Richie', 'X'), Player.new('Felipe', 'O')) }
+  specify { expect(game_logic).to be_a GameLogic }
+  specify { expect(game_logic).not_to be_a String }
+
   describe 'Assign Players' do
     it 'Players are assign' do
       expect(game_logic.x_player).to be_a(Player)
@@ -11,7 +14,6 @@ RSpec.describe GameLogic do
       expect(game_logic.o_player).not_to be_a(Integer)
     end
   end
-
 
   describe 'Array is correct' do
     it 'Array created' do
@@ -25,14 +27,12 @@ RSpec.describe GameLogic do
       expect(temp_arr).not_to eql(false)
     end
 
-
     let(:temp_arr) { game_logic.arr.all? { |x| x.size == 3 } }
     it 'All sub array lenght should be 3' do
       expect(temp_arr).to eql(true)
       expect(temp_arr).not_to eql(false)
     end
   end
-
 
   describe 'Game on initialize' do
     it 'Game on should be true until otherwise' do
@@ -108,7 +108,6 @@ RSpec.describe GameLogic do
       expect(game_logic.game_moves).to be_within(1).of(8)
       expect(game_logic.game_moves).not_to eql(0)
     end
-
 
     it 'Game moves should 0 when there is draw game' do
       game_logic.arr[0] = %w[X X O]
